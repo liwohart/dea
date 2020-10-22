@@ -15,7 +15,7 @@ pip install numpy pandas pulp openpyxl
 Syntax:
 
 ```
-python [primal|dual]_dea.py \path\to\file.csv N M input1 ... inputN output1 ... outputM [0|1]
+python [-1:optional] [primal|dual]_dea.py \path\to\file.csv N M input1 ... inputN output1 ... outputM [0|1:optional]
 ```
 
 where ``N`` and ``M`` indicate the number of inputs and outputs respectively.
