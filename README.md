@@ -12,4 +12,4 @@ pip install numpy pandas pulp
 
 # How to use
 
-Syntax: ``python [primal|dual]_dea.py /path/to/file.csv number_of_inputs number_of_outputs input1 ... inputn output1 ... outputm``
+Syntax: ```python [primal|dual]_dea.py /path/to/file.csv number_of_inputs number_of_outputs input1 ... inputn output1 ... outputm```
