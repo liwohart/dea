@@ -15,7 +15,7 @@ pip install numpy pandas pulp openpyxl
 Syntax:
 
 ```
-python [primal|dual]_dea.py \path\to\file.csv no_inputs no_outputs input1 ... inputN output1 ... outputM [0|1]
+python [primal|dual]_dea.py \path\to\file.csv N M input1 ... inputN output1 ... outputM [0|1]
 ```
 
 The last argument is a boolean that indicates if the results will be uploaded to a xlsx file or not.
