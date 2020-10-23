@@ -19,7 +19,7 @@ def make_ppl1(dmu, dt, inputs, outputs, t, l):
     for o in outputs:
         temp_ppl1 += np.dot(dt[o],temp_l) - dt[o][dmu] >= 0, f'_{o}'
 
-    temp_ppl1.solve(solver=pl.GLPK(msg=False))
+    temp_ppl1.solve()
 
     return temp_ppl1
 
@@ -41,7 +41,7 @@ def make_ppl2(dmu, dt, inputs, outputs, t, l, s):
     for o in outputs:
         temp_ppl2 += np.dot(dt[o],temp_l) - dt.loc[dmu][o] == temp_s[1][outputs.index(o)], f'_{o}'
 
-    temp_ppl2.solve(solver=pl.GLPK(msg=False))
+    temp_ppl2.solve()
     
     return temp_ppl1, temp_ppl2
 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     optimal = dt[x_hat+y_hat]
     slacks = dt[l]
 
-    if argv[-1].isnumeric() and not bool(int(argv[-1])):
+    if argv[-1].isnumeric() and bool(int(argv[-1])):
         with pd.ExcelWriter(f'results\\{name}_dual.xlsx') as writer:
             results.to_excel(writer,sheet_name='main_results')
             optimal.to_excel(writer,sheet_name='optimal_values')
