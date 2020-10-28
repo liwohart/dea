@@ -25,9 +25,6 @@ The last argument is a boolean that indicates if the results will be uploaded to
 
 Let's say we have the following dataset taken from the book _Data Envelopment Analysis_, written by William W. Cooper, Lawrewnce M. Seiford and Kaoru Tone.
 
-Say it's stored in `data\hospital.csv`
-
-
 | dmu | doctors | nurses | outpatients | inpatients |
 | --- | -------:| ------:| -----------:| ----------:|
 |A    |       20|     151|          100|          90|
@@ -44,7 +41,9 @@ Say it's stored in `data\hospital.csv`
 |L    |       38|     284|          250|         120|
 
 where we have the numbers of doctors and of nurses as _inputs_ and the numbers of inpatients and of outpatients as _outputs_.
-Then, assuming we want solve using the primal CCR model, the command would be
+
+
+Say it's stored in `data\hospital.csv`. Then, assuming we want to solve it using the primal CCR model, the command would be
 
 ```
 python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
