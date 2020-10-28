@@ -23,10 +23,10 @@ The last argument is a boolean that indicates if the results will be uploaded to
 
 # Example
 
-Let's say we have the following dataset
+Let's say we have the following dataset, which is stored in `data\hospital.csv`
 
 
-| dmu |medicos|enfermeiros|internados|ambulatoriais|
+| dmu |doctors|   nurses  |inpatients| outpatients |
 | --- | -----:| ---------:| --------:| -----------:|
 |A    |     20|        151|       100|           90|
 |B    |     19|        131|       150|           50|
@@ -40,3 +40,12 @@ Let's say we have the following dataset
 |J    |     50|        268|       250|          100|
 |K    |     53|        306|       260|          147|
 |L    |     38|        284|       250|          120|
+
+where we have the numbers of doctors and of nurses as _inputs_ and the numbers of inpatients and of outpatients as _outputs_.
+Then, assuming we want solve using the primal CCR model, the command would be
+
+```
+python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
+```
+
+If we wanted to write the data to a `.xlsx` file, we'd simply had to append `1` to the of the command, and the results would be stored in `results\hospital.xlsx`.
