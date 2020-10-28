@@ -26,20 +26,20 @@ The last argument is a boolean that indicates if the results will be uploaded to
 Let's say we have the following dataset, which is stored in `data\hospital.csv`
 
 
-| dmu |doctors|   nurses  |inpatients| outpatients |
-| --- | -----:| ---------:| --------:| -----------:|
-|A    |     20|        151|       100|           90|
-|B    |     19|        131|       150|           50|
-|C    |     25|        160|       160|           55|
-|D    |     27|        168|       180|           72|
-|E    |     22|        158|        94|           66|
-|F    |     55|        255|       230|           90|
-|G    |     33|        235|       220|           88|
-|H    |     31|        206|       150|           80|
-|I    |     30|        244|       190|          100|
-|J    |     50|        268|       250|          100|
-|K    |     53|        306|       260|          147|
-|L    |     38|        284|       250|          120|
+| dmu | doctors | nurses | outpatients | inpatients |
+| --- | -------:| ------:| -----------:| ----------:|
+|A    |       20|     151|          100|          90|
+|B    |       19|     131|          150|          50|
+|C    |       25|     160|          160|          55|
+|D    |       27|     168|          180|          72|
+|E    |       22|     158|           94|          66|
+|F    |       55|     255|          230|          90|
+|G    |       33|     235|          220|          88|
+|H    |       31|     206|          150|          80|
+|I    |       30|     244|          190|         100|
+|J    |       50|     268|          250|         100|
+|K    |       53|     306|          260|         147|
+|L    |       38|     284|          250|         120|
 
 where we have the numbers of doctors and of nurses as _inputs_ and the numbers of inpatients and of outpatients as _outputs_.
 Then, assuming we want solve using the primal CCR model, the command would be
