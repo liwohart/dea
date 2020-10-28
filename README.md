@@ -48,4 +48,4 @@ Then, assuming we want solve using the primal CCR model, the command would be
 python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
 ```
 
-If we wanted to write the data to a `.xlsx` file, we'd simply had to append `1` to the of the command, and the results would be stored in `results\hospital.xlsx`.
+If we wanted to write the data to a `.xlsx` file, we'd simply had to append `1` to the command, and the results would be stored in `results\hospital.xlsx`.
