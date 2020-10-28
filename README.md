@@ -1,4 +1,4 @@
-# DEA
+# About
 
 Scripts to compute the primal and the dual CCR model for Data Envelopment Analysis.
 
