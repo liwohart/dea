@@ -1,4 +1,5 @@
 from sys import argv
+import os
 import pandas as pd
 import pulp as pl
 import numpy as np
@@ -28,7 +29,7 @@ def make_ppl(dmu, dt, inputs, outputs, v, u):
 
 if __name__ == '__main__':
     file_path = argv[1]
-    name = file_path[file_path.rindex('\\')+1:file_path.rindex('.')]
+    name = file_path[file_path.rindex(os.sep)+1:file_path.rindex('.')]
 
     dt = pd.read_csv(file_path,sep=';').set_index('dmu')
     n_inputs, n_outputs = int(argv[2]), int(argv[3])
@@ -69,8 +70,11 @@ if __name__ == '__main__':
 
     results = dt[inputs+outputs+v+u+razao]
 
-    if argv[-1].isnumeric() and not bool(int(argv[-1])):
-        with pd.ExcelWriter(f'results\\{name}.xlsx') as writer:
+    if argv[-1].isnumeric() and bool(int(argv[-1])):
+        results_path = os.path.join('results',f'{name}.xlsx')
+
+        with pd.ExcelWriter(results_path) as writer:
+            print(f'loading {results_path}...')
             results.to_excel(writer,sheet_name='main_results')
             rests.to_excel(writer,sheet_name='env_map')
 
