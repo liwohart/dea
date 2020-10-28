@@ -23,7 +23,8 @@ The last argument is a boolean that indicates if the results will be uploaded to
 
 # Example
 
-Let's say we have the following dataset, which is stored in `data\hospital.csv`
+Let's say we have the following dataset taken from the book _Data Envelopment Analysis_, written by William W. Cooper, Lawrewnce M. Seiford and Kaoru Tone
+Say it's stored in `data\hospital.csv`
 
 
 | dmu | doctors | nurses | outpatients | inpatients |
