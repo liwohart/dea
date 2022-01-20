@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     dt = pd.read_csv(file_path).set_index('dmu')
     n_inputs, n_outputs = int(argv[2]), int(argv[3])
-    assert len(argv) == 4 + n_inputs + n_outputs, 'insuficient variables'
+    assert len(argv) >= 4 + n_inputs + n_outputs, 'insuficient variables'
 
     inputs = argv[4:4+n_inputs]
     outputs = argv[4+n_inputs:4+n_inputs+n_outputs]
