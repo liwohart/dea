@@ -47,11 +47,13 @@ def make_ppl2(dmu, dt, inputs, outputs, t, l, s):
     return temp_ppl1, temp_ppl2
 
 if __name__ == '__main__':
+    assert len(argv) > 4, 'insuficient arguments'
     file_path = argv[1]
     name = file_path[file_path.rindex(os.sep)+1:file_path.rindex('.')]
 
-    dt = pd.read_csv(file_path,sep=';').set_index('dmu')
+    dt = pd.read_csv(file_path).set_index('dmu')
     n_inputs, n_outputs = int(argv[2]), int(argv[3])
+    assert len(argv) == 4 + n_inputs + n_outputs, 'insuficient variables'
 
     inputs = argv[4:4+n_inputs]
     outputs = argv[4+n_inputs:4+n_inputs+n_outputs]
