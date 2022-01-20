@@ -20,7 +20,7 @@ def make_ppl1(dmu, dt, inputs, outputs, t, l):
     for o in outputs:
         temp_ppl1 += np.dot(dt[o],temp_l) - dt[o][dmu] >= 0, f'_{o}'
 
-    temp_ppl1.solve()
+    temp_ppl1.solve(solver=pl.PULP_CBC_CMD(msg=False))
 
     return temp_ppl1
 
@@ -42,7 +42,7 @@ def make_ppl2(dmu, dt, inputs, outputs, t, l, s):
     for o in outputs:
         temp_ppl2 += np.dot(dt[o],temp_l) - dt.loc[dmu][o] == temp_s[1][outputs.index(o)], f'_{o}'
 
-    temp_ppl2.solve()
+    temp_ppl2.solve(solver=pl.PULP_CBC_CMD(msg=False))
     
     return temp_ppl1, temp_ppl2
 

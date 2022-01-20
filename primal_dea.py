@@ -23,7 +23,7 @@ def make_ppl(dmu, dt, inputs, outputs, v, u):
     for i in dt.index:
         temp_ppl += np.dot(dt[outputs].loc[i],temp_u) - np.dot(dt[inputs].loc[i],temp_v) <= 0, f'_{i}'
 
-    temp_ppl.solve()
+    temp_ppl.solve(solver=pl.PULP_CBC_CMD(msg=False))
 
     return temp_ppl
 
