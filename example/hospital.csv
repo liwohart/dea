@@ -1,5 +1,4 @@
-
-dmu,doctors,nurses,outpatients,inpatients
+hospital,doctors,nurses,outpatients,inpatients
 A,20,151,100,90
 B,19,131,150,50
 C,25,160,160,55
