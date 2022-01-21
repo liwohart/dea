@@ -46,7 +46,7 @@ Let's say we have the following dataset taken from the book _Data Envelopment An
 where we have the numbers of doctors and of nurses as **inputs** and the numbers of inpatients and of outpatients as **outputs**.
 
 
-Say it's stored in `example/hospital.csv`. Then, assuming we want to solve it using the dumal CCR model, the command would be
+Say it's stored in `example/hospital.csv`. Then, assuming we want to solve it using the dual CCR model, the command would be
 
 ```console
 python3 dual_dea.py example/hospital.csv -d hospital -i doctors nurses -o inpatients outpatients
