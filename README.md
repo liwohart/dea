@@ -43,7 +43,7 @@ Let's say we have the following dataset taken from the book _Data Envelopment An
 |K         |       53|     306|          260|         147|
 |L         |       38|     284|          250|         120|
 
-where we have the numbers of doctors and of nurses as **inputs** and the numbers of inpatients and of outpatients as **outputs**.
+where we have the numbers of doctors and of nurses as **inputs** and the numbers of inpatients and outpatients as **outputs**.
 
 
 Say it's stored in `example/hospital.csv` and we want to store the results in `results/`. Then, assuming we want to solve it using the dual CCR model, the command would be
