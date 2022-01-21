@@ -19,7 +19,6 @@ pip install numpy pandas pulp openpyxl
 # How to use
 
 Syntax:
-
 ```console
 python3 (primal|dual)_dea.py /path/to/file.csv [[-d|--dmu] <index>] (-i|--inputs) <input1> [...] (-o|--outputs) <output1> [...] [0|1]
 ```
