@@ -2,7 +2,7 @@
 
 Scripts to compute the primal and the dual CCR model for Data Envelopment Analysis.
 
-It's a work in progress, here's some issues to be solved in the future:
+It's a work in progress, here's some issues I plan to work on:
   - [X] Specify **dmu** column
   - [X] Fix flag system
   - [ ] Save to `.ods`
