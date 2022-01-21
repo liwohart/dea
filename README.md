@@ -49,5 +49,5 @@ where we have the numbers of doctors and of nurses as **inputs** and the numbers
 Say it's stored in `example/hospital.csv` and we want to store the results in `results/`. Then, assuming we want to solve it using the dual CCR model, the command would be
 
 ```console
-python3 dual_dea.py example/hospital.csv -d hospital -i doctors nurses -o inpatients outpatients -w ./results/
+python3 dual_dea.py ./example/hospital.csv -d hospital -i doctors nurses -o inpatients outpatients -w ./results/
 ```
