@@ -1,5 +1,5 @@
 from sys import argv
-import os
+from os import sep, path
 import pandas as pd
 import pulp as pl
 import numpy as np
@@ -64,29 +64,47 @@ def get_dmu(argv):
         dmu = 'dmu'
     return dmu
 
+def get_destination(argv, stem):
+    if '-w' in argv or '--destination' in argv:
+        try:
+            flag_pos = argv.index('-w')
+        except:
+            flag_pos = argv.index('--destination')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no destination specified."
+        destination = argv[flag_pos + 1]
+    else:
+        destination = stem
+    return destination
+
 def parse_arguments():
+    assert len(argv) > 1 and not argv[1].startswith('-'), 'no file path provided'
     file_path = argv[1]
-    name = file_path[file_path.rindex(os.sep) + 1 : file_path.rindex('.')]
+    name = file_path[file_path.rindex(sep) + 1 : file_path.rindex('.')]
+    stem = file_path[: file_path.rindex(sep)]
     dmu = get_dmu(argv)
     inputs = get_inputs(argv)
     outputs = get_outputs(argv)
-    return file_path, name, dmu, inputs, outputs
+    destination = get_destination(argv,stem)
+    return file_path, name, dmu, inputs, outputs, destination
 
 
 if __name__ == '__main__':
-    file_path, name, dmu, inputs, outputs = parse_arguments()
+    file_path, name, dmu, inputs, outputs, destination = parse_arguments()
 
+    print('creating dataframe...')
     dt = pd.read_csv(file_path).set_index(dmu)
-    v = [f'peso_{i}' for i in inputs]
-    u = [f'peso_{o}' for o in outputs]
+    v = [f'weight_{i}' for i in inputs]
+    u = [f'weight_{o}' for o in outputs]
 
-    inputs_v = [f'{i}_x_peso' for i in inputs]
-    outputs_u = [f'{o}_x_peso' for o in outputs]
+    inputs_v = [f'{i}_x_weight' for i in inputs]
+    outputs_u = [f'{o}_x_weight' for o in outputs]
 
     razao = ['inputs_v','outputs_u']
 
+    print(' - solving LP problems...')
     ppl = {dmu:make_ppl(dmu, dt, inputs, outputs, v, u) for dmu in dt.index}
 
+    print(' - loadind data...')
     for comp in v:
         dt[comp] = [ppl[dmu].variablesDict()[comp].varValue for dmu in dt.index]
     for comp in u:
@@ -110,10 +128,7 @@ if __name__ == '__main__':
 
     results = dt[inputs+outputs+v+u+razao]
 
-    results_path = os.path.join('results',f'{name}.xlsx')
-
-    print(results)
-    print(rests)
+    results_path = path.join(destination,f'{name}.xlsx')
 
     with pd.ExcelWriter(results_path) as writer:
         print(f'loading {results_path}...')

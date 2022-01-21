@@ -115,18 +115,18 @@ if __name__ == '__main__':
 
     print('creating dataframe...')
     dt = pd.read_csv(file_path).set_index(dmu)
-    t = 'eficiencia'
-    l = [f'peso_de_{d}' for d in dt.index]
-    s = [[f'excesso_em_{i}' for i in inputs],
-         [f'deficit_em_{o}' for o in outputs]]
-    x_hat = [f'valor_otimo_de_{i}' for i in inputs]
-    y_hat = [f'valor_otimo_de_{o}' for o in outputs]
+    t = 'efficiency'
+    l = [f'weight_of_{d}' for d in dt.index]
+    s = [[f'excess_in_{i}' for i in inputs],
+         [f'deficit_in_{o}' for o in outputs]]
+    x_hat = [f'optimal_value_of_{i}' for i in inputs]
+    y_hat = [f'optimal_value_of_{o}' for o in outputs]
 
     print(' - solving LP problems...')
     ppl = {dmu : make_ppl2(dmu, dt, inputs, outputs, t, l, s)
             for dmu in dt.index}
 
-    print(' - eficiency...')
+    print(' - efficiency...')
     dt[t] = [ppl[dmu][0].variablesDict()[t].varValue
         for dmu in dt.index]
 
