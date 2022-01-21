@@ -2,6 +2,11 @@
 
 Scripts to compute the primal and the dual CCR model for Data Envelopment Analysis.
 
+It's a work in progress, here's some issues to be solved in the future:
+  - [ ] Fix flag system
+  - [ ] Save to `.ods`
+  - [ ] Choose solver
+
 # Installing
 
 Paste this on your command line to install the dependencies
