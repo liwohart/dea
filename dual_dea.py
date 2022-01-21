@@ -1,5 +1,5 @@
 from sys import argv
-import os
+from os import sep, path
 import pandas as pd
 import pulp as pl
 import numpy as np
@@ -21,6 +21,7 @@ def make_ppl1(dmu, dt, inputs, outputs, t, l):
         temp_ppl1 += np.dot(dt[o],temp_l) - dt[o][dmu] >= 0, f'_{o}'
 
     temp_ppl1.solve(solver=pl.PULP_CBC_CMD(msg=False))
+    #print('.',end='')
 
     return temp_ppl1
 
@@ -43,6 +44,7 @@ def make_ppl2(dmu, dt, inputs, outputs, t, l, s):
         temp_ppl2 += np.dot(dt[o],temp_l) - dt.loc[dmu][o] == temp_s[1][outputs.index(o)], f'_{o}'
 
     temp_ppl2.solve(solver=pl.PULP_CBC_CMD(msg=False))
+    #print('.',end='')
     
     return temp_ppl1, temp_ppl2
 
@@ -77,24 +79,41 @@ def get_dmu(argv):
             flag_pos = argv.index('-d')
         except:
             flag_pos = argv.index('--dmu')
-        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no `dmu` specified."
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no 'dmu' specified."
         dmu = argv[flag_pos + 1]
     else:
         dmu = 'dmu'
     return dmu
 
+def get_destination(argv, stem):
+    if '-w' in argv or '--destination' in argv:
+        try:
+            flag_pos = argv.index('-w')
+        except:
+            flag_pos = argv.index('--destination')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no destination specified."
+        destination = argv[flag_pos + 1]
+    else:
+        destination = stem
+    return destination
+
 def parse_arguments():
+    assert len(argv) > 1 and not argv[1].startswith('-'), 'no file path provided'
     file_path = argv[1]
-    name = file_path[file_path.rindex(os.sep) + 1 : file_path.rindex('.')]
+    name = file_path[file_path.rindex(sep) + 1 : file_path.rindex('.')]
+    stem = file_path[: file_path.rindex(sep)]
     dmu = get_dmu(argv)
     inputs = get_inputs(argv)
     outputs = get_outputs(argv)
-    return file_path, name, dmu, inputs, outputs
+    destination = get_destination(argv,stem)
+    return file_path, name, dmu, inputs, outputs, destination
 
 
 if __name__ == '__main__':
-    file_path, name, dmu, inputs, outputs = parse_arguments()
+    print('parsing...')
+    file_path, name, dmu, inputs, outputs, destination = parse_arguments()
 
+    print('creating dataframe...')
     dt = pd.read_csv(file_path).set_index(dmu)
     t = 'eficiencia'
     l = [f'peso_de_{d}' for d in dt.index]
@@ -103,28 +122,30 @@ if __name__ == '__main__':
     x_hat = [f'valor_otimo_de_{i}' for i in inputs]
     y_hat = [f'valor_otimo_de_{o}' for o in outputs]
 
+    print(' - solving LP problems...')
     ppl = {dmu : make_ppl2(dmu, dt, inputs, outputs, t, l, s)
             for dmu in dt.index}
 
-    ols = [[ppl[dmu][0].variablesDict()[comp].varValue
-            for dmu in dt.index]
-        for comp in l]
-
+    print(' - eficiency...')
     dt[t] = [ppl[dmu][0].variablesDict()[t].varValue
         for dmu in dt.index]
 
+    print(' - weights...')
     for comp in l:
         dt[comp] = [ppl[dmu][1].variablesDict()[comp].varValue
             for dmu in dt.index]
 
+    print(' - excess and deficit...')
     for sign in [0,1]:
         for comp in s[sign]:
             dt[comp] = [ppl[dmu][1].variablesDict()[comp].varValue
                 for dmu in dt.index]
 
+    print(' - optimal input values...')
     for i in range(len(inputs)):
         dt[x_hat[i]] = (dt[inputs[i]] * dt[t] - dt[s[0][i]])
 
+    print(' - optimal output values...')
     for o in range(len(outputs)):
         dt[y_hat[o]] = (dt[outputs[o]] + dt[s[1][o]])
 
@@ -132,11 +153,7 @@ if __name__ == '__main__':
     optimal = dt[x_hat + y_hat]
     slacks = dt[l]
 
-    print(results)
-    print(optimal)
-    print(slacks)
-
-    results_path = os.path.join('results',f'{name}_dual.xlsx')
+    results_path = path.join(destination,f'{name}_dual.xlsx')
 
     with pd.ExcelWriter(results_path) as writer:
         print(f'loading {results_path}...')
