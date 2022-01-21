@@ -46,17 +46,51 @@ def make_ppl2(dmu, dt, inputs, outputs, t, l, s):
     
     return temp_ppl1, temp_ppl2
 
-if __name__ == '__main__':
-    assert len(argv) > 4, 'insuficient arguments'
+def get_inputs(argv):
+    assert '-i' in argv or '--inputs' in argv, "no inputs provided."
+    try:
+        flag_pos = argv.index('-i')
+    except:
+        flag_pos = argv.index('--inputs')
+    end = flag_pos + 1
+    while end < len(argv) and not argv[end].startswith('-'):
+        end += 1
+    assert end != flag_pos + 1, "no inputs provided."
+    return argv[flag_pos + 1 : end]
+
+
+def get_outputs(argv):
+    assert '-o' in argv or '--outputs' in argv, "no outputs provided."
+    try:
+        flag_pos = argv.index('-o')
+    except:
+        flag_pos = argv.index('--outputs')
+    end = flag_pos + 1
+    while end < len(argv) and not argv[end].startswith('-'):
+        end += 1
+    assert end != flag_pos + 1, "no outputs provided."
+    return argv[flag_pos + 1 : end]
+
+def get_dmu(argv):
+    assert '-d' in argv or '--dmu' in argv, "no `dmu` specified."
+    try:
+        flag_pos = argv.index('-d')
+    except:
+        flag_pos = argv.index('--dmu')
+    assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no `dmu` specified."
+
+def parse_arguments():
     file_path = argv[1]
-    name = file_path[file_path.rindex(os.sep)+1:file_path.rindex('.')]
+    name = file_path[file_path.rindex(os.sep) + 1 : file_path.rindex('.')]
+    inputs = get_inputs(argv)
+    outputs = get_outputs(argv)
+    return file_path, name, inputs, outputs
+
+
+if __name__ == '__main__':
+    file_path, name, inputs, outputs = parse_arguments()
 
     dt = pd.read_csv(file_path).set_index('dmu')
-    n_inputs, n_outputs = int(argv[2]), int(argv[3])
-    assert len(argv) >= 4 + n_inputs + n_outputs, 'insuficient variables'
-
-    inputs = argv[4:4+n_inputs]
-    outputs = argv[4+n_inputs:4+n_inputs+n_outputs]
     t = 'eficiencia'
     l = [f'peso_de_{d}' for d in dt.index]
     s = [[f'excesso_em_{i}' for i in inputs],
@@ -64,7 +98,8 @@ if __name__ == '__main__':
     x_hat = [f'valor_otimo_de_{i}' for i in inputs]
     y_hat = [f'valor_otimo_de_{o}' for o in outputs]
 
-    ppl = {dmu : make_ppl2(dmu, dt, inputs, outputs, t, l, s) for dmu in dt.index}
+    ppl = {dmu : make_ppl2(dmu, dt, inputs, outputs, t, l, s)
+            for dmu in dt.index}
 
     ols = [[ppl[dmu][0].variablesDict()[comp].varValue
             for dmu in dt.index]
@@ -83,25 +118,24 @@ if __name__ == '__main__':
                 for dmu in dt.index]
 
     for i in range(len(inputs)):
-        dt[x_hat[i]] = (dt[inputs[i]]*dt[t]-dt[s[0][i]])
+        dt[x_hat[i]] = (dt[inputs[i]] * dt[t] - dt[s[0][i]])
 
     for o in range(len(outputs)):
-        dt[y_hat[o]] = (dt[outputs[o]]+dt[s[1][o]])
+        dt[y_hat[o]] = (dt[outputs[o]] + dt[s[1][o]])
 
     results = dt[inputs + outputs + [t] + s[0] + s[1]]
-    optimal = dt[x_hat+y_hat]
+    optimal = dt[x_hat + y_hat]
     slacks = dt[l]
-
-    if argv[-1].isnumeric() and bool(int(argv[-1])):
-        results_path = os.path.join('results',f'{name}_dual.xlsx')
-
-        with pd.ExcelWriter(results_path) as writer:
-            print(f'loading {results_path}...')
-            results.to_excel(writer,sheet_name='main_results')
-            optimal.to_excel(writer,sheet_name='optimal_values')
-            slacks.to_excel(writer,sheet_name='env_map')
 
     print(results)
     print(optimal)
     print(slacks)
+
+    results_path = os.path.join('results',f'{name}_dual.xlsx')
+
+    with pd.ExcelWriter(results_path) as writer:
+        print(f'loading {results_path}...')
+        results.to_excel(writer,sheet_name='main_results')
+        optimal.to_excel(writer,sheet_name='optimal_values')
+        slacks.to_excel(writer,sheet_name='env_map')
 
