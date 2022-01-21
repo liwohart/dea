@@ -8,9 +8,9 @@ It's a work in progress, here's some issues to be solved in the future:
   - [ ] Save to `.ods`
   - [ ] Choose solver
 
-# Installing
+# Installing Dependencies
 
-Paste this on your command line to install the dependencies
+Install `pip`, then paste this on your command line to install the dependencies
 
 ```console
 pip install numpy pandas pulp openpyxl
@@ -21,11 +21,10 @@ pip install numpy pandas pulp openpyxl
 Syntax:
 
 ```console
-python (primal|dual)_dea.py \path\to\file.csv <N> <M> <input1> ... <inputN> <output1> ... <outputM> [0|1]
+python3 (primal|dual)_dea.py /path/to/file.csv [[-d|--dmu] <index>] (-i|--inputs) <input1> [...] (-o|--outputs) <output1> [...] [0|1]
 ```
 
-where `N` and `M` indicate the number of inputs and outputs respectively.
-The last argument is a boolean that indicates if the results will be uploaded to a xlsx file or not.
+If `<index>` id not provided, then `dmu` defaults to `"dmu"`.
 
 ## Example
 
@@ -49,10 +48,8 @@ Let's say we have the following dataset taken from the book _Data Envelopment An
 where we have the numbers of doctors and of nurses as **inputs** and the numbers of inpatients and of outpatients as **outputs**.
 
 
-Say it's stored in `data\hospital.csv`. Then, assuming we want to solve it using the primal CCR model, the command would be
+Say it's stored in `data/hospital.csv`. Then, assuming we want to solve it using the primal CCR model, the command would be
 
 ```console
-python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
+python3 primal_dea.py data/hospital.csv -i doctors nurses -o inpatients outpatients
 ```
-
-If we wanted to write the data to a `.xlsx` file, we'd simply had to append `1` to the command, and the results would be stored in `results\hospital.xlsx`.
