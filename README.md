@@ -23,7 +23,7 @@ Syntax:
 python3 (primal|dual)_dea.py /path/to/file.csv [[-d|--dmu] <index>] (-i|--inputs) <input1> [...] (-o|--outputs) <output1> [...] [0|1]
 ```
 
-If `<index>` id not provided, then `dmu` defaults to `"dmu"`.
+If `<index>` is not provided, then `dmu` defaults to `"dmu"`.
 
 ## Example
 
