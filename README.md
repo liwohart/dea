@@ -23,7 +23,7 @@ Syntax:
 python3 (primal|dual)_dea.py /path/to/file.csv [(-d|--dmu) <index>] (-i|--inputs) <input1> [...] (-o|--outputs) <output1> [...] [(-w|--destination) <dir>]
 ```
 
-The default values for the `--dmu` and `--destination` flags are `dmu` and the same directory as the `.csv` file, respectively.
+The default values for the `--dmu` and `--destination` flags are `'dmu'` and the same directory as the `.csv` file, respectively.
 
 ## Example
 
