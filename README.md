@@ -3,6 +3,7 @@
 Scripts to compute the primal and the dual CCR model for Data Envelopment Analysis.
 
 It's a work in progress, here's some issues to be solved in the future:
+  - [ ] Specify **dmu** column
   - [ ] Fix flag system
   - [ ] Save to `.ods`
   - [ ] Choose solver
@@ -45,7 +46,7 @@ Let's say we have the following dataset taken from the book _Data Envelopment An
 |K    |       53|     306|          260|         147|
 |L    |       38|     284|          250|         120|
 
-where we have the numbers of doctors and of nurses as _inputs_ and the numbers of inpatients and of outpatients as _outputs_.
+where we have the numbers of doctors and of nurses as **inputs** and the numbers of inpatients and of outpatients as **outputs**.
 
 
 Say it's stored in `data\hospital.csv`. Then, assuming we want to solve it using the primal CCR model, the command would be
