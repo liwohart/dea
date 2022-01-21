@@ -72,25 +72,30 @@ def get_outputs(argv):
     return argv[flag_pos + 1 : end]
 
 def get_dmu(argv):
-    assert '-d' in argv or '--dmu' in argv, "no `dmu` specified."
-    try:
-        flag_pos = argv.index('-d')
-    except:
-        flag_pos = argv.index('--dmu')
-    assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no `dmu` specified."
+    if '-d' in argv or '--dmu' in argv:
+        try:
+            flag_pos = argv.index('-d')
+        except:
+            flag_pos = argv.index('--dmu')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no `dmu` specified."
+        dmu = argv[flag_pos + 1]
+    else:
+        dmu = 'dmu'
+    return dmu
 
 def parse_arguments():
     file_path = argv[1]
     name = file_path[file_path.rindex(os.sep) + 1 : file_path.rindex('.')]
+    dmu = get_dmu(argv)
     inputs = get_inputs(argv)
     outputs = get_outputs(argv)
-    return file_path, name, inputs, outputs
+    return file_path, name, dmu, inputs, outputs
 
 
 if __name__ == '__main__':
-    file_path, name, inputs, outputs = parse_arguments()
+    file_path, name, dmu, inputs, outputs = parse_arguments()
 
-    dt = pd.read_csv(file_path).set_index('dmu')
+    dt = pd.read_csv(file_path).set_index(dmu)
     t = 'eficiencia'
     l = [f'peso_de_{d}' for d in dt.index]
     s = [[f'excesso_em_{i}' for i in inputs],
