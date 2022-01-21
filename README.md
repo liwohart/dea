@@ -13,7 +13,7 @@ It's a work in progress, here's some issues to be solved in the future:
 Paste this on your command line to install the dependencies
 
 ```console
-$ pip install numpy pandas pulp openpyxl
+pip install numpy pandas pulp openpyxl
 ```
 
 # How to use
@@ -21,7 +21,7 @@ $ pip install numpy pandas pulp openpyxl
 Syntax:
 
 ```console
-$ python (primal|dual)_dea.py \path\to\file.csv <N> <M> <input1> ... <inputN> <output1> ... <outputM> [0|1]
+python (primal|dual)_dea.py \path\to\file.csv <N> <M> <input1> ... <inputN> <output1> ... <outputM> [0|1]
 ```
 
 where `N` and `M` indicate the number of inputs and outputs respectively.
@@ -52,7 +52,7 @@ where we have the numbers of doctors and of nurses as **inputs** and the numbers
 Say it's stored in `data\hospital.csv`. Then, assuming we want to solve it using the primal CCR model, the command would be
 
 ```console
-$ python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
+python primal_dea.py data\hospital.csv 2 2 doctors nurses inpatients outpatients
 ```
 
 If we wanted to write the data to a `.xlsx` file, we'd simply had to append `1` to the command, and the results would be stored in `results\hospital.xlsx`.
