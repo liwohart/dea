@@ -27,25 +27,32 @@ def make_ppl(dmu, dt, inputs, outputs, v, u):
 
     return temp_ppl
 
+def get_stem_name(fp):
+    sep_pos, dot_pos = fp.rindex(sep), fp.rindex('.') if '.' in fp else -1
+    name = f'{fp[sep_pos + 1 : dot_pos]}.xlsx' if sep_pos + 1 < dot_pos else None
+    stem = fp[: sep_pos]
+    return stem, name
+
 def get_inputs(argv):
-    assert '-i' in argv or '--inputs' in argv, "no inputs provided."
-    try:
+    if '-i' in argv:
         flag_pos = argv.index('-i')
-    except:
+    elif '--inputs' in argv:
         flag_pos = argv.index('--inputs')
+    else:
+        raise ValueError("no inputs provided.")
     end = flag_pos + 1
     while end < len(argv) and not argv[end].startswith('-'):
         end += 1
     assert end != flag_pos + 1, "no inputs provided."
     return argv[flag_pos + 1 : end]
 
-
 def get_outputs(argv):
-    assert '-o' in argv or '--outputs' in argv, "no outputs provided."
-    try:
+    if '-o' in argv:
         flag_pos = argv.index('-o')
-    except:
+    elif '--outputs' in argv:
         flag_pos = argv.index('--outputs')
+    else:
+        raise ValueError("no outputs provided")
     end = flag_pos + 1
     while end < len(argv) and not argv[end].startswith('-'):
         end += 1
@@ -53,42 +60,44 @@ def get_outputs(argv):
     return argv[flag_pos + 1 : end]
 
 def get_dmu(argv):
-    if '-d' in argv or '--dmu' in argv:
-        try:
-            flag_pos = argv.index('-d')
-        except:
-            flag_pos = argv.index('--dmu')
-        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no `dmu` specified."
+    if '-d' in argv:
+        flag_pos = argv.index('-d')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no 'dmu' column specified."
+        dmu = argv[flag_pos + 1]
+    elif '--dmu' in argv:
+        flag_pos = argv.index('--dmu')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no 'dmu' column specified."
         dmu = argv[flag_pos + 1]
     else:
         dmu = 'dmu'
     return dmu
 
-def get_destination(argv, stem):
-    if '-w' in argv or '--destination' in argv:
-        try:
-            flag_pos = argv.index('-w')
-        except:
-            flag_pos = argv.index('--destination')
+def get_destination(argv, stem, name):
+    if '-w' in argv:
+        flag_pos = argv.index('-w')
         assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no destination specified."
-        destination = argv[flag_pos + 1]
+        destination, _name = get_stem_name(argv[flag_pos + 1])
+    elif '--destination' in argv:
+        flag_pos = argv.index('--destination')
+        assert flag_pos + 1 < len(argv) and not argv[flag_pos + 1].startswith('-'), "no destination specified."
+        destination, _name = get_stem_name(argv[flag_pos + 1])
     else:
         destination = stem
-    return destination
+    return destination, name if _name is None else _name
 
 def parse_arguments():
     assert len(argv) > 1 and not argv[1].startswith('-'), 'no file path provided'
     file_path = argv[1]
-    name = file_path[file_path.rindex(sep) + 1 : file_path.rindex('.')]
-    stem = file_path[: file_path.rindex(sep)]
+    stem, name = get_stem_name(file_path)
     dmu = get_dmu(argv)
     inputs = get_inputs(argv)
     outputs = get_outputs(argv)
-    destination = get_destination(argv,stem)
+    destination, name = get_destination(argv,stem,name)
     return file_path, name, dmu, inputs, outputs, destination
 
 
 if __name__ == '__main__':
+    print('parsing...')
     file_path, name, dmu, inputs, outputs, destination = parse_arguments()
 
     print('creating dataframe...')
@@ -128,7 +137,7 @@ if __name__ == '__main__':
 
     results = dt[inputs+outputs+v+u+razao]
 
-    results_path = path.join(destination,f'{name}.xlsx')
+    results_path = path.join(destination,name)
 
     with pd.ExcelWriter(results_path) as writer:
         print(f'loading {results_path}...')
