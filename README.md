@@ -11,7 +11,7 @@ It's a work in progress, here's some issues I plan to work on:
 Install `pip`, then paste this on your command line to install the dependencies
 
 ```console
-pip install numpy pandas pulp openpyxl
+pip install numpy pandas pulp openpyxl odfpy
 ```
 
 # How to use
