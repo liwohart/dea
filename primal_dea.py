@@ -1,5 +1,6 @@
 from sys import argv
 from os import sep, path
+from time import time
 import pandas as pd
 import pulp as pl
 import numpy as np
@@ -97,27 +98,38 @@ def parse_arguments():
 
 
 if __name__ == '__main__':
-    print('parsing...')
+    print('parsing : ',end='')
+    a = time()*1000
     file_path, name, dmu, inputs, outputs, destination = parse_arguments()
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print('creating dataframe...')
+    print('creating dataframe :')
+    print(' - initial dataframe ..: ',end='')
+    a = time()*1000
     dt = pd.read_csv(file_path).set_index(dmu)
     v = [f'weight_{i}' for i in inputs]
     u = [f'weight_{o}' for o in outputs]
-
     inputs_v = [f'{i}_x_weight' for i in inputs]
     outputs_u = [f'{o}_x_weight' for o in outputs]
-
     razao = ['inputs_v','outputs_u']
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - solving LP problems...')
+    print(' - solving LP problems : ',end='')
+    a = time()*1000
     ppl = {dmu:make_ppl(dmu, dt, inputs, outputs, v, u) for dmu in dt.index}
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - loadind data...')
+    print(' - loadind data .......:',end='')
+    a = time()*1000
     for comp in v:
         dt[comp] = [ppl[dmu].variablesDict()[comp].varValue for dmu in dt.index]
     for comp in u:
         dt[comp] = [ppl[dmu].variablesDict()[comp].varValue for dmu in dt.index]
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
     for iv,i,_v in zip(inputs_v,inputs,v):
         dt[iv] = dt[i]*dt[_v]
@@ -140,7 +152,10 @@ if __name__ == '__main__':
     results_path = path.join(destination,name)
 
     with pd.ExcelWriter(results_path) as writer:
-        print(f'loading {results_path}...')
+        print(f'loading {results_path} : ',end='')
+        a = time()*1000
         results.to_excel(writer,sheet_name='main_results')
         rests.to_excel(writer,sheet_name='env_map')
+        b = time()*1000
+        print(f'{b-a:11.6f} ms')
 

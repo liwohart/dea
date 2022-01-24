@@ -3,6 +3,7 @@ from os import sep, path
 import pandas as pd
 import pulp as pl
 import numpy as np
+from time import time
 
 
 def make_ppl1(dmu, dt, inputs, outputs, t, l):
@@ -116,10 +117,15 @@ def parse_arguments():
 
 
 if __name__ == '__main__':
-    print('parsing...')
+    print('parsing : ',end='')
+    a = time()*1000
     file_path, name, dmu, inputs, outputs, destination = parse_arguments()
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print('creating dataframe...')
+    print('creating dataframe :')
+    print(' - initial dataframe ....: ',end='')
+    a = time()*1000
     dt = pd.read_csv(file_path).set_index(dmu)
     t = 'efficiency'
     l = [f'weight_of_{d}' for d in dt.index]
@@ -127,33 +133,53 @@ if __name__ == '__main__':
          [f'deficit_in_{o}' for o in outputs]]
     x_hat = [f'optimal_value_of_{i}' for i in inputs]
     y_hat = [f'optimal_value_of_{o}' for o in outputs]
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - solving LP problems...')
+    print(' - solving LP problems ..: ',end='')
+    a = time()*1000
     ppl = {dmu : make_ppl2(dmu, dt, inputs, outputs, t, l, s)
             for dmu in dt.index}
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - efficiency...')
+    print(' - efficiency ...........: ',end='')
+    a = time()*1000
     dt[t] = [ppl[dmu][0].variablesDict()[t].varValue
         for dmu in dt.index]
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - weights...')
+    print(' - weights ..............: ',end='')
+    a = time()*1000
     for comp in l:
         dt[comp] = [ppl[dmu][1].variablesDict()[comp].varValue
             for dmu in dt.index]
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - excess and deficit...')
+    print(' - excess and deficit ...: ',end='')
+    a = time()*1000
     for sign in [0,1]:
         for comp in s[sign]:
             dt[comp] = [ppl[dmu][1].variablesDict()[comp].varValue
                 for dmu in dt.index]
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - optimal input values...')
+    print(' - optimal input values .: ',end='')
+    a = time()*1000
     for i in range(len(inputs)):
         dt[x_hat[i]] = (dt[inputs[i]] * dt[t] - dt[s[0][i]])
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
-    print(' - optimal output values...')
+    print(' - optimal output values : ',end='')
+    a = time()*1000
     for o in range(len(outputs)):
         dt[y_hat[o]] = (dt[outputs[o]] + dt[s[1][o]])
+    b = time()*1000
+    print(f'{b-a:11.6f} ms')
 
     results = dt[inputs + outputs + [t] + s[0] + s[1]]
     optimal = dt[x_hat + y_hat]
@@ -162,8 +188,11 @@ if __name__ == '__main__':
     results_path = path.join(destination,name)
 
     with pd.ExcelWriter(results_path) as writer:
-        print(f'loading {results_path}...')
+        print(f'loading {results_path} : ',end='')
+        a = time()*1000
         results.to_excel(writer,sheet_name='main_results')
         optimal.to_excel(writer,sheet_name='optimal_values')
         slacks.to_excel(writer,sheet_name='env_map')
+        b = time()*1000
+        print(f'{b-a:11.6f} ms')
 
