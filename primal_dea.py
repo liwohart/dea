@@ -122,7 +122,7 @@ if __name__ == '__main__':
     b = time()*1000
     print(f'{b-a:11.6f} ms')
 
-    print(' - loadind data .......:',end='')
+    print(' - loadind data .......: ',end='')
     a = time()*1000
     for comp in v:
         dt[comp] = [ppl[dmu].variablesDict()[comp].varValue for dmu in dt.index]
@@ -147,7 +147,7 @@ if __name__ == '__main__':
         index=dt.index,
         columns=dt.index.to_list()).round(6)
 
-    results = dt[inputs+outputs+v+u+razao]
+    results = dt[inputs + outputs + v + u + razao]
 
     results_path = path.join(destination,name)
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
         print(f'loading {results_path} : ',end='')
         a = time()*1000
         results.to_excel(writer,sheet_name='main_results')
-        rests.to_excel(writer,sheet_name='env_map')
+        rests[rests.index[rests.max() == 0]].to_excel(writer,sheet_name='env_map')
         b = time()*1000
         print(f'{b-a:11.6f} ms')
 

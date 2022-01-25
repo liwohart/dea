@@ -128,7 +128,7 @@ if __name__ == '__main__':
     a = time()*1000
     dt = pd.read_csv(file_path).set_index(dmu)
     t = 'efficiency'
-    l = [f'weight_of_{d}' for d in dt.index]
+    l = np.array([f'weight_of_{d}' for d in dt.index])
     s = [[f'excess_in_{i}' for i in inputs],
          [f'deficit_in_{o}' for o in outputs]]
     x_hat = [f'optimal_value_of_{i}' for i in inputs]
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
     results = dt[inputs + outputs + [t] + s[0] + s[1]]
     optimal = dt[x_hat + y_hat]
-    slacks = dt[l]
+    slacks = dt[l[dt[l].sum() > 0]]
 
     results_path = path.join(destination,name)
 
