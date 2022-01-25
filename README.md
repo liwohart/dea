@@ -4,7 +4,7 @@ Scripts to compute the primal and the dual CCR model for Data Envelopment Analys
 
 It's a work in progress, here's some issues I plan to work on:
   - [X] Fix flag system<ul><li>[X] Fix **input** and **output** flags</li><li>[X] Specify **dmu** column</li><li>[X] Specify **destination** path</li><li>[X] Fix `destination` flag</li></ul>
-  - [ ] Add times of execution to runtime log
+  - [X] Add times of execution to runtime log
   - [ ] Implement BCC model
 
 # Installing Dependencies
